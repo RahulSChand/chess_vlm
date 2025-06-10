@@ -223,7 +223,7 @@ if __name__ == "__main__":
 
     # Configure training arguments
     training_args = SFTConfig(
-        output_dir=f"/scr/rahulsc/{args.name}",  # Directory to save the model
+        output_dir=f"{args.name}",  # Directory to save the model
         num_train_epochs=500,  # Number of training epochs
         per_device_train_batch_size=2,  # Batch size for training
         per_device_eval_batch_size=1,  # Batch size for evaluation
