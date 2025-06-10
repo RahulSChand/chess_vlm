@@ -7,6 +7,17 @@ from stockfish import Stockfish
 import chess
 import pickle
 from tqdm import tqdm
+import argparse
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Generate chess positions with best moves using Stockfish')
+    parser.add_argument('--dataset_size', type=int, default=1024,
+                      help='Number of samples to generate')
+    parser.add_argument('--dataset_name', type=str, default='best_moves_128_with_matrix_train_1024_filter',
+                      help='Name of the dataset folder')
+    parser.add_argument('--num_attempts', type=int, default=1200,
+                      help='Maximum number of attempts to generate valid positions')
+    return parser.parse_args()
 
 def uci_to_san(fen, uci_move):
     """Convert UCI move to SAN notation"""
@@ -37,9 +48,6 @@ def get_best_k_moves_from_fen(fen,k=10):
     # Get top 5 moves
     top_moves = stockfish.get_top_moves(k)
     
-    # Clean up
-    # stockfish.send_quit_command()
-    
     return top_moves
 
 def check_whose_turn(fen):
@@ -48,62 +56,55 @@ def check_whose_turn(fen):
     turn = fen_parts[1]  # 'w' or 'b'
     return "White" if turn == 'w' else "Black"
 
-os.environ["QT_QPA_PLATFORM"] = "offscreen"
+def main():
+    args = parse_args()
+    os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
-app = QApplication([])
-chess_game = Chess()
+    app = QApplication([])
+    chess_game = Chess()
 
-temp_stockfish = Stockfish(path="./stockfish_engine/Stockfish-sf_17.1/src/stockfish")
+    temp_stockfish = Stockfish(path="./stockfish_engine/Stockfish-sf_17.1/src/stockfish")
 
-num = 1200
-dataset_name = "best_moves_128_with_matrix_train_1024_filter"
-board_pos_np = []
-color_arr = []
+    board_pos_np = []
+    color_arr = []
 
-os.makedirs(dataset_name, exist_ok=True)
+    os.makedirs(args.dataset_name, exist_ok=True)
 
-count = 0
+    count = 0
 
-for i in tqdm(range(num)):
+    for i in tqdm(range(args.num_attempts)):
+        a = chess_game.get_screenshot()
+        matrix_board, fen = chess_game.set_legal_position()
 
-    a = chess_game.get_screenshot()
-    matrix_board, fen = chess_game.set_legal_position()
+        temp_stockfish.set_fen_position(fen)
 
-    temp_stockfish.set_fen_position(fen)
-    # print(temp_stockfish.get_board_visual())
-    # temp_stockfish.send_quit_command()
+        top_moves = get_best_k_moves_from_fen(fen)
+        color = check_whose_turn(fen)
+        
+        san_moves = [uci_to_san(fen, move['Move']) for move in top_moves]
 
-    top_moves = get_best_k_moves_from_fen(fen)
+        if len(san_moves) < 1:
+            continue
 
-    color = check_whose_turn(fen)
-    
+        count += 1
+        board_pos_np.append(san_moves)
+        color_arr.append(color)
+        
+        matrix_np = np.array(matrix_board[0])
+        print(matrix_np)
 
-    san_moves = [uci_to_san(fen, move['Move']) for move in top_moves]
+        a = chess_game.get_screenshot()
+        a.save(f"{args.dataset_name}/screenshot_{i}.png", "png")
+        np.save(f"{args.dataset_name}/board_pos_{i}.npy", matrix_np)
 
-    if len(san_moves) < 1:
-        continue
+        if count == args.dataset_size:
+            break
 
-    count += 1
-    board_pos_np.append(san_moves)
-    color_arr.append(color)
+    with open(f'{args.dataset_name}/best_moves.pkl', 'wb') as f:
+        pickle.dump(board_pos_np, f)
 
-    
-    matrix_np = np.array(matrix_board[0])
-    
+    with open(f'{args.dataset_name}/color.pkl', 'wb') as f:
+        pickle.dump(color_arr, f)
 
-    print(matrix_np)
-
-    # board_pos_np = np.array(board_pos)
-    a = chess_game.get_screenshot()
-    a.save(f"{dataset_name}/screenshot_{i}.png", "png")
-    np.save(f"{dataset_name}/board_pos_{i}.npy", matrix_np)
-
-    if count == 1024:
-        break
-
-
-with open(f'{dataset_name}/best_moves.pkl', 'wb') as f:
-    pickle.dump(board_pos_np, f)
-
-with open(f'{dataset_name}/color.pkl', 'wb') as f:
-    pickle.dump(color_arr, f)
+if __name__ == "__main__":
+    main()

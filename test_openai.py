@@ -1,5 +1,13 @@
 import base64
 from openai import OpenAI
+import argparse
+import os
+
+# Set up argument parser
+parser = argparse.ArgumentParser(description='Process chess board images using OpenAI API')
+parser.add_argument('--dataset', type=str, default='dataset_random_384',
+                    help='Path to the dataset directory containing screenshots')
+args = parser.parse_args()
 
 client = OpenAI()
 
@@ -34,10 +42,12 @@ Ensure that your output strictly follows this format. Just return the matrix, no
 Solution:
 """
 
+# Get list of screenshot files in the dataset directory
+screenshot_files = [f for f in os.listdir(args.dataset) if f.startswith('screenshot_') and f.endswith('.png')]
+screenshot_files.sort()  # Ensure files are processed in order
 
-
-for i in range(128):
-    image_path = f"dataset_random_384/screenshot_{i}.png"
+for screenshot_file in screenshot_files:
+    image_path = os.path.join(args.dataset, screenshot_file)
     # Getting the Base64 string
     base64_image = encode_image(image_path)
 

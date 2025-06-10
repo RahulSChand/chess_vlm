@@ -1,6 +1,14 @@
 import base64
 from openai import OpenAI
 import pickle
+import argparse
+import os
+
+# Set up argument parser
+parser = argparse.ArgumentParser(description='Process chess board images and predict best moves using OpenAI API')
+parser.add_argument('--folder', type=str, default='best_moves_128_with_matrix',
+                    help='Path to the folder containing screenshots and color data')
+args = parser.parse_args()
 
 client = OpenAI()
 
@@ -35,15 +43,19 @@ def add_player_color(color):
     
     assert False, "Invalid color"
 
-folder = "best_moves_128_with_matrix"
-
-
-
-with open(f'{folder}/color.pkl', 'rb') as f:
+# Load color data
+with open(os.path.join(args.folder, 'color.pkl'), 'rb') as f:
     color_data = pickle.load(f)
 
-for i in range(128):
-    image_path = f"{folder}/screenshot_{i}.png"
+# Get list of screenshot files in the folder
+screenshot_files = [f for f in os.listdir(args.folder) if f.startswith('screenshot_') and f.endswith('.png')]
+screenshot_files.sort()  # Ensure files are processed in order
+
+for screenshot_file in screenshot_files:
+    image_path = os.path.join(args.folder, screenshot_file)
+    # Extract index from filename for color data lookup
+    i = int(screenshot_file.split('_')[1].split('.')[0])
+    
     # Getting the Base64 string
     base64_image = encode_image(image_path)
 

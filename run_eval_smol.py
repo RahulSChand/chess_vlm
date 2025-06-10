@@ -19,6 +19,8 @@ def parse_args():
                         help='Path to the dataset')
     parser.add_argument('--limit', default=50,type=int, required=True,
                         help='Limit for evaluation')
+    
+    parser.add_argument('--task', type=str, default="describe_board", help='Task to evaluate on', choices=["describe_board", "best_move"])
     return parser.parse_args()
 
 def return_dataset_images(dataset_path,i,create_msg,main_prompt):
@@ -245,22 +247,31 @@ if __name__ == "__main__":
         device_map="auto"
     )
 
-    main_prompt = get_main_prompt()
-    # main_prompt = get_main_prompt_move()
+    if args.task == "describe_board":
+        main_prompt = get_main_prompt()
+    elif args.task == "best_move":
+        main_prompt = get_main_prompt_move()
+    else:
+        assert False, "Invalid task"
+
 
     mean = 0.0
     running_mean = 0.0
     for i in tqdm(range(args.limit)):
 
-        msg, board_pos = return_dataset_images(args.dataset_path, i, create_msg, main_prompt)
+        if args.task == "describe_board":
+            msg, board_pos = return_dataset_images(args.dataset_path, i, create_msg, main_prompt)
+        elif args.task == "best_move":
+            msg, board_pos = return_dataset_images_move(args.dataset_path, i, create_msg, main_prompt)
+        else:
+            assert False, "Invalid task"
 
         out = call_model(msg, model)
         
         print(out, flush=True)
-        # print(board_pos, flush=True)
         print("--------")
 
-        # Try to parse the output as a matrix for evaluation
+        
         
 
     

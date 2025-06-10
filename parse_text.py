@@ -1,5 +1,6 @@
 import numpy as np
 import ast
+import argparse
 
 def parse_chess_arrays(filename, output_shape=(128, 8, 8)):
     """
@@ -97,20 +98,26 @@ def save_arrays(arrays, output_filename="chess_arrays_full.npy"):
     else:
         print("No arrays to save")
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='Parse chess arrays from text file and save as numpy array')
+    parser.add_argument('--input', type=str, required=True,
+                      help='Input text file containing chess arrays')
+    parser.add_argument('--output', type=str, required=True,
+                      help='Output NPY file to save the arrays')
+    return parser.parse_args()
+
 # Main execution
 if __name__ == "__main__":
-    # filename = "mini_results_384.txt"
-    filename = "pixtral_board.txt"
-    output_filename = "pixtral_board_final.npy"
+    args = parse_args()
     
     print("Starting to parse chess arrays...")
-    arrays = parse_chess_arrays(filename)
+    arrays = parse_chess_arrays(args.input)
     
     if arrays is not None:
         print(f"\nParsing complete!")
         print(f"Final array shape: {arrays.shape}")
         
-        save_arrays(arrays, output_filename = output_filename)
+        save_arrays(arrays, output_filename=args.output)
         
         print(f"\nFirst parsed array:")
         print(arrays[0])

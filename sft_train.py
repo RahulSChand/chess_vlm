@@ -21,6 +21,9 @@ parser.add_argument('--grad_accum_steps', type=int, default=2, help='Gradient ac
 parser.add_argument('--model_name', type=str, default="llava-hf/llava-1.5-7b-hf", help='Model name/path')
 parser.add_argument('--save_name', type=str, default="llava_finetuned_384_only_img_masked_2", help='Save name for output dir and wandb')
 parser.add_argument('--dataset_name', type=str, default="dataset_random_384/", help='Dataset path')
+parser.add_argument('--task', type=str, default="describe_board", help='Task to train on', choices=["describe_board", "best_move"])
+
+
 args = parser.parse_args()
 
 accelerator = Accelerator()
@@ -173,48 +176,6 @@ def create_msg_move(img_path, pkl, prompt):
         }
     ]
 
-#32,28,216
-
-# image_token_id = processor.tokenizer.additional_special_tokens_ids[
-#             processor.tokenizer.additional_special_tokens.index("<image>")]
-
-# def collate_fn(examples):
-#   texts = []
-#   images = []
-#   for example in examples:
-#       image = example["image"]
-#       if image.mode != 'RGB':
-#         image = image.convert('RGB')
-#       question = example["question"]
-#       answer = example["multiple_choice_answer"]
-#       messages = [
-#           {
-#               "role": "user",
-#               "content": [
-#                   {"type": "text", "text": "Answer briefly."},
-#                   {"type": "image"},
-#                   {"type": "text", "text": question}
-#               ]
-#           },
-#           {
-#               "role": "assistant",
-#               "content": [
-#                   {"type": "text", "text": answer}
-#               ]
-#           }
-#       ]
-#       text = processor.apply_chat_template(messages, add_generation_prompt=False)
-#       texts.append(text.strip())
-#       images.append([image])
-
-#   batch = processor(text=texts, images=images, return_tensors="pt", padding=True)
-#   labels = batch["input_ids"].clone()
-#   labels[labels == processor.tokenizer.pad_token_id] = -100
-#   labels[labels == image_token_id] = -100
-#   batch["labels"] = labels
-
-#   return batch
-
 def collate_fn_v2(examples):
     texts = [processor.apply_chat_template(example, tokenize=False) for example in examples]
 
@@ -345,9 +306,12 @@ model = Idefics3ForConditionalGeneration.from_pretrained(
     device_map="auto"
 )
 
-train_dataset = return_dataset_images_move(args.dataset_name,create_msg_move,system_message_move)
-
-# train_dataset = return_dataset_images_move(args.dataset_name,create_msg_move,system_message_move)
+if args.task == "describe_board":
+    train_dataset = return_dataset_images(args.dataset_name,create_msg,system_message)
+elif args.task == "best_move":
+    train_dataset = return_dataset_images_move(args.dataset_name,create_msg_move,system_message_move)
+else:
+    assert False, "Invalid task"
 
 eval_dataset = [train_dataset[0]]
 
@@ -383,19 +347,12 @@ wandb.init(
     config=training_args,
 )
 
-# training_args.remove_unused_columns = False  # Keep unused columns in dataset
-training_args.remove_unused_columns = False  # Keep unused columns in dataset
-# wandb.init(
-#     project="qwen2-7b-instruct-trl-sft-ChartQA",  # change this
-#     name="qwen2-7b-instruct-trl-sft-ChartQA",  # change this
-#     config=training_args,
-# )
 
+training_args.remove_unused_columns = False  # Keep unused columns 
  
 # print(train_dataset[0])
 
 #! Comment this out
-
 # num_samples_to_inspect = 4
 # sample_examples_for_collate = [train_dataset[i] for i in range(num_samples_to_inspect)]
 

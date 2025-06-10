@@ -5,7 +5,7 @@ import chess
 import chess.engine
 from PyQt5.QtWidgets import QMainWindow
 from test import generate_random_legal_position
-from chess_ui import ChessUI
+from chess_utils.chess_ui import ChessUI
 
 WIN = 101
 LOSE = 102
