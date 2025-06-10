@@ -84,7 +84,7 @@ python test_openai_best.py --folder dataset_folder | tee openai_results_best.txt
 
 ---
 
-## Training local models
+# Training local models
 
 ### SmolVLM
 
@@ -109,27 +109,27 @@ python sft_qwen_move.py --model "Qwen/Qwen2-VL-7B-Instruct" --dataset_path "data
 
 ---
 
-## Evaluating local models
+# Evaluating local models
 
 ### SmolVLM
 
 ```bash
-python run_eval_smol.py --model "save_name/" --dataset_path "dataset_name/" --limit 128 --task "describe_board"
+python run_eval_smol.py --model "saved_weights/" --dataset_path "dataset_name/" --limit 128 --task "describe_board"
 ```
 
 ### Qwen
 
 ```bash
-python run_eval_qwen.py --model "save_name/" --dataset_path "dataset_name/" --limit 128
+python run_eval_qwen.py --model "saved_weights/" --dataset_path "dataset_name/" --limit 128
 ```
 
 ```bash
-python run_eval_qwen_move.py --model "save_name/" --dataset_path "dataset_name/" --limit 128
+python run_eval_qwen_move.py --model "saved_weights/" --dataset_path "dataset_name/" --limit 128
 ```
 
 --- 
 
-## Getting accuracy numbers
+# Getting accuracy numbers
 
 All the evaluation scripts above print the output. Therefore they should be used as `python command | tee text_results.txt`
 
