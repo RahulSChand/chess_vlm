@@ -1,7 +1,27 @@
+[![Python 3](https://img.shields.io/badge/Python-3.x-blue?style=flat&logo=python&logoColor=white)]()
+[![License](https://img.shields.io/badge/License-MIT-green.svg)]()
+
 # ChessMates: Testing how good VLMs are at chess
 
 <img width="661" alt="image" src="https://github.com/user-attachments/assets/4d4c72c3-f66d-4085-8817-ce9f2dc304a2" />
 
+
+# What can the repo do?
+
+[![Dataset](https://img.shields.io/badge/🎲_Dataset-Generation-blue)]()
+[![Evaluation](https://img.shields.io/badge/🤖_Model-Evaluation-green)]()
+[![Training](https://img.shields.io/badge/🔄_Model-Training-orange)]()
+[![Analysis](https://img.shields.io/badge/📊_Performance-Analysis-purple)]()
+
+1. Generate chess dataset for predicting the best move and describing board positions.
+
+2. Evaluate OpenAI (and compatible open-source models via OpenRouter) on the datasets.
+
+3. Train Qwen and SmolVLM on the datasets.
+
+4. Evaluate Qwen and SmolVLM on the datasets.
+
+---
 
 
 # Installation requirements
