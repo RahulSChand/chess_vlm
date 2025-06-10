@@ -11,24 +11,31 @@
 To install stockfish (to generate the best moves) follow the following instructions: 
 
 ### Download Stockfish 17.1 SOURCE CODE (not binary)
+```bash
 mkdir stockfish_engine
 cd stockfish_engine
 wget https://github.com/official-stockfish/Stockfish/archive/refs/tags/sf_17.1.zip
 unzip sf_17.1.zip
 cd Stockfish-sf_17.1/src
-
+```
 ### Compile the stable release
+```bash
 make clean
 make -j build ARCH=x86-64-modern
+```
 
 ### Test it (if this runs it means u are good)
+```bash
 ./stockfish
+```
 
 ---
 
 ## Generate dataset of chess board images and 8x8 matrix of board positions
 
-`python generate_random.py --save_folder dataset_folder --dataset_size 1024`
+```bash
+python generate_random.py --save_folder dataset_folder --dataset_size 1024
+```
 
 - Generates N images each of size 384x384 and a corresponding 8x8 npy array. 
 
@@ -36,7 +43,10 @@ make -j build ARCH=x86-64-modern
 
 ## Generate dataset of chess board images and best move for that position
 
-`python generate_best_move.py --dataset_size 1024 --dataset_name dataset_folder --num_attempts 1200`
+```bash
+python generate_best_move.py --dataset_size 1024 --dataset_name dataset_folder --num_attempts 1200
+```
+
 
 - Generate `dataset_size` images and saves a a single `best_moves.pkl` file made of the 10 best moves for that position and a `color.pkl` file showing which color should play the next move.
 
@@ -52,13 +62,17 @@ make -j build ARCH=x86-64-modern
 
 #### For desctibing the board position task
 
-`python test_openai.py --dataset dataset_folder | tee openai_results.txt`
+```bash
+python test_openai.py --dataset dataset_folder | tee openai_results.txt
+```
 
 - Will save the results in `openai_results.txt`. The reason we save it in a text file is because often the outputs are not neatly formatted and manual post processing is required for fair evaluation.
 
 #### For predicting the best move task
 
-`python test_openai_best.py --folder dataset_folder | tee openai_results_best.txt`
+```bash
+python test_openai_best.py --folder dataset_folder | tee openai_results_best.txt
+```
 
 ---
 
@@ -66,7 +80,9 @@ make -j build ARCH=x86-64-modern
 
 ### SmolVLM
 
-`python sft_train.py --model_name "HuggingFaceTB/SmolVLM2-2.2B-Instruct" --save_name "save_weights_here/" --dataset_name "dataset_name/" --task "describe_board"`
+```bash
+python sft_train.py --model_name "HuggingFaceTB/SmolVLM2-2.2B-Instruct" --save_name "save_weights_here/" --dataset_name "dataset_name/" --task "describe_board"
+```
 
 - `task` can be `describe_board` or `best_move`
 
@@ -75,9 +91,13 @@ make -j build ARCH=x86-64-modern
 
 For simplicity there are 2 scripts for training Qwen. One for describing the board position and one for predicting the best move.
 
-`python sft_qwen.py --model "Qwen/Qwen2-VL-7B-Instruct" --dataset_path "dataset_name/" --limit 1024 --name "save_name/"`
+```bash
+python sft_qwen.py --model "Qwen/Qwen2-VL-7B-Instruct" --dataset_path "dataset_name/" --limit 1024 --name "save_name/"
+```
 
-`python sft_qwen_move.py --model "Qwen/Qwen2-VL-7B-Instruct" --dataset_path "dataset_name/" --limit 1024 --name "save_name/"`
+```bash
+python sft_qwen_move.py --model "Qwen/Qwen2-VL-7B-Instruct" --dataset_path "dataset_name/" --limit 1024 --name "save_name/"
+```
 
 ---
 
@@ -85,13 +105,19 @@ For simplicity there are 2 scripts for training Qwen. One for describing the boa
 
 ### SmolVLM
 
-`python run_eval_smol.py --model "save_name/" --dataset_path "dataset_name/" --limit 128 --task "describe_board"`
+```bash
+python run_eval_smol.py --model "save_name/" --dataset_path "dataset_name/" --limit 128 --task "describe_board"
+```
 
 ### Qwen
 
-`python run_eval_qwen.py --model "save_name/" --dataset_path "dataset_name/" --limit 128`
+```bash
+python run_eval_qwen.py --model "save_name/" --dataset_path "dataset_name/" --limit 128
+```
 
-`python run_eval_qwen_move.py --model "save_name/" --dataset_path "dataset_name/" --limit 128`
+```bash
+python run_eval_qwen_move.py --model "save_name/" --dataset_path "dataset_name/" --limit 128
+```
 
 --- 
 
