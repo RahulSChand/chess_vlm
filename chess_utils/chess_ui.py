@@ -5,9 +5,9 @@ from PyQt5.QtCore import (QEventLoop, QPropertyAnimation, Qt, QThread,
 from PyQt5.QtGui import QFont, QPixmap, QResizeEvent
 from PyQt5.QtWidgets import QGridLayout, QLabel, QSizePolicy, QWidget
 
-import common as common
-from consts import PIECE_CONVERSION, PIECE_MAP
-from position import Position
+from chess_utils import common
+from chess_utils.consts import PIECE_CONVERSION, PIECE_MAP
+from chess_utils.position import Position
 
 SQR_SIZE = 100
 

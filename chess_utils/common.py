@@ -3,9 +3,9 @@ import re
 
 from gmpy2 import bit_scan1
 
-import flood_fill as ff
-from attack_tables import pseudo_attacks
-from consts import (
+from chess_utils import flood_fill as ff
+from chess_utils.attack_tables import pseudo_attacks
+from chess_utils.consts import (
     A_FILE_BB, B_BISHOP, B_FILE_BB, B_KING, B_KNIGHT, B_PAWN, B_QUEEN, B_ROOK,
     BLACK, C_FILE_BB, D_FILE_BB, E_FILE_BB, EAST, F_FILE_BB, G_FILE_BB,
     H_FILE_BB, KING, NORTH, RANK_1_BB, RANK_2_BB, RANK_3_BB, RANK_4_BB,

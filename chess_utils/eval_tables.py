@@ -1,4 +1,4 @@
-from consts import (B_BISHOP, B_KING, B_KNIGHT,
+from chess_utils.consts import (B_BISHOP, B_KING, B_KNIGHT,
                                               B_PAWN, B_QUEEN, B_ROOK, BISHOP,
                                               ENDGAME, KNIGHT, MIDGAME, QUEEN,
                                               ROOK, W_BISHOP, W_KING, W_KNIGHT,

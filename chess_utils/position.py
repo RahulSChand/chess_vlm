@@ -2,14 +2,14 @@ from collections import deque
 
 from gmpy2 import bit_scan1, popcount
 
-from attack_tables import (batk_table, bishop_masks,
+from chess_utils.attack_tables import (batk_table, bishop_masks,
                                                      pawn_attacks,
                                                      pseudo_attacks,
                                                      ratk_table, rook_masks)
-from common import (
+from chess_utils.common import (
     bb_between, flip_vertical, gen_bitboard_indices, index_to_san, pawn_push,
     pawn_shift, piece_int_to_string, piece_string_to_int, san_to_index)
-from consts import (
+from chess_utils.consts import (
     ALL, ALL_PIECES, B_BISHOP, B_KING, B_KINGSIDE, B_KNIGHT, B_PAWN, B_QUEEN,
     B_QUEENSIDE, B_ROOK, BISHOP, BLACK, CAPTURES, CASTLING, COLOURS,
     EN_PASSANT, ENDGAME, KING, KINGSIDE, KNIGHT, MATERIAL, MIDGAME,
@@ -18,8 +18,8 @@ from consts import (
     RANK_8, ROOK, W_BISHOP, W_KING, W_KINGSIDE, W_KNIGHT, W_PAWN, W_QUEEN,
     W_QUEENSIDE, W_ROOK, WHITE, ZOBRIST_BOARD, ZOBRIST_CASTLING,
     ZOBRIST_COLOUR, ZOBRIST_ENPASSANT)
-from eval_tables import psq_table
-from movegen import (
+from chess_utils.eval_tables import psq_table
+from chess_utils.movegen import (
     generate_promotions, get_bishop_moves, get_king_moves, get_knight_moves,
     get_pawn_moves, get_queen_moves, get_rook_moves)
 

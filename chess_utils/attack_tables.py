@@ -1,5 +1,5 @@
-import flood_fill as ff
-from consts import (_64BITS, BISHOP, BLACK, KING,
+from chess_utils import flood_fill as ff
+from chess_utils.consts import (_64BITS, BISHOP, BLACK, KING,
                                               KNIGHT, QUEEN, ROOK, WHITE)
 
 # The set of squares for possible rook attack blocker pieces

@@ -1,10 +1,10 @@
 from gmpy2 import bit_scan1
 
-from attack_tables import (batk_table, bishop_masks,
+from chess_utils.attack_tables import (batk_table, bishop_masks,
                                                      pseudo_attacks,
                                                      ratk_table, rook_masks)
-from common import pawn_shift
-from consts import (
+from chess_utils.common import pawn_shift
+from chess_utils.consts import (
     A_FILE_BB, ALL, BISHOP_PROMOTION, CAPTURES, H_FILE_BB, KING, KNIGHT,
     KNIGHT_PROMOTION, NORTH, NORTHEAST, NORTHWEST, PROMOTION, QUEEN_PROMOTION,
     QUIETS, RANK_2_BB, RANK_3_BB, RANK_6_BB, RANK_7_BB, ROOK_PROMOTION, WHITE)
