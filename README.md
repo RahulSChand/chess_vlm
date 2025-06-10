@@ -6,7 +6,13 @@
 
 # Installation requirements
 
-`pip install -r requirements.txt`
+Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+<details>
+<summary>Stockfish Installation Instructions</summary>
 
 To install stockfish (to generate the best moves) follow the following instructions: 
 
@@ -28,6 +34,8 @@ make -j build ARCH=x86-64-modern
 ```bash
 ./stockfish
 ```
+
+</details>
 
 ---
 
