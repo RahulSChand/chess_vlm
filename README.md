@@ -123,28 +123,38 @@ python run_eval_qwen_move.py --model "save_name/" --dataset_path "dataset_name/"
 
 ## Getting accuracy numbers
 
-All the evaluation scripts above print the output. Therefore they should be used as `python command | tee output.txt`
+All the evaluation scripts above print the output. Therefore they should be used as `python command | tee text_results.txt`
 
-This is because outputs often need manual formatting. To get the accuracy numbers once you have the `output.txt` use the following script:
+This is because outputs often need manual formatting. To get the accuracy numbers once you have the `text_results.txt` use the following script:
 
 ### For describe board task
 
-1) Clean/Process: `python parse_text_describe.py --input "output.txt" --output "output.npy"` 
+1) Clean/Process
+```bash
+python parse_text_describe.py --input "text_results.txt" --output "output.npy"
+```
 
 This will process the output.txt and also print what lines can't be processed so that you can manually clean them and rerun the script. Results are saved in `output.npy`
 
-2) Get accuracy: `python get_accuracy.py --processed_output "output.npy" --test_dataset "dataset_name/" --task "describe_board"` will print the accuracy.
+2) Print accuracy: 
+```bash
+python get_accuracy.py --processed_output "output.npy" --test_dataset "dataset_name/" --task "describe_board"
+```
 
 ---
 
 ### For best move task
 
-1) Clean/Process: `python parse_text_move.py --input "output.txt" --output "output.npy"` 
+1) Clean/Process: 
+```bash
+python parse_best_move.py --input "text_results.txt" --output "output.pkl"
+```
 
-
-
-
-
+2) Print accuracy: 
+```bash
+python get_accuracy.py --processed_output "output.pkl" --test_dataset "dataset_name/" --task "best_move"
+```
+---
 
 ## Can img-to-img model generate how the board will look like after the best move?
 
